@@ -54,6 +54,7 @@ pipeline {
             steps {
                 dir('Eks-terraform') {
                     script {
+                    echo "Action: ${env.action}" // Log the value of the action variable
                     sh 'terraform ${env.action} --auto-approve'
                 }
               }
