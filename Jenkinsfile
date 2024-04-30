@@ -44,7 +44,9 @@ pipeline {
             steps {
                 dir('Eks-terraform') {
                     sh 'terraform plan'
+                    script {
                     env.action = 'apply'
+                    }
                 }
             }
         }
