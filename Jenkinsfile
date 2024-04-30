@@ -1,65 +1,44 @@
 pipeline {
     agent any
-    environment {
-        action = ''
-    }
+  
     stages {
         stage('Checkout from Git') {
             steps {
                 git branch: 'main', url: 'https://github.com/Sibapanda22/Tetris-V1.git'
             }
         }
-        stage('Terraform version') {
-            steps {
-                sh 'terraform --version'
-            }
+  stage('Terraform version'){
+             steps{
+                 sh 'terraform --version'
+             }
         }
-        stage('Terraform init') {
-            steps {
-                dir('Eks-terraform') {
-                    sh 'terraform init'
-                }
-            }
+        stage('Terraform init'){
+             steps{
+                 dir('Eks-terraform') {
+                      sh 'terraform init'
+                   }      
+             }
         }
-        stage('Terraform validate') {
-            steps {
-                dir('Eks-terraform') {
-                    script {
-                        sh 'terraform validate'
-                        if (currentBuild.result == null || currentBuild.result == 'SUCCESS') {
-                            echo 'Terraform validate succeeded'
-                            env.action = 'plan'
-                        } else {
-                            echo 'Terraform validate failed, proceeding with destroy'
-                            env.action = 'destroy'
-                        }
-                    }
-                }
-            }
+        stage('Terraform validate'){
+             steps{
+                 dir('Eks-terraform') {
+                      sh 'terraform validate'
+                   }      
+             }
         }
-        stage('Terraform plan') {
-            when {
-                expression { env.action == 'plan' }
-            }
-            steps {
-                dir('Eks-terraform') {
-                    sh 'terraform plan'
-                    script {
-                    env.action = 'apply'
-                    }
-                }
-            }
+        stage('Terraform plan'){
+             steps{
+                 dir('Eks-terraform') {
+                      sh 'terraform plan'
+                   }      
+             }
         }
-        stage('Terraform apply/destroy') {
-            steps {
-                dir('Eks-terraform') {
-                    script {
-                    echo "Action: ${env.action}" // Log the value of the action variable
-                    sh 'terraform ${env.action} --auto-approve'
-                }
-              }
-            }
+        stage('Terraform apply/destroy'){
+             steps{
+                 dir('Eks-terraform') {
+                      sh 'terraform ${action} --auto-approve'
+                   }      
+             }
         }
     }
 }
-
