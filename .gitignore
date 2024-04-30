@@ -112,3 +112,4 @@ dist
 
 #Mac
 .DS_Store
+.terraform-provider-aws_v5.47.0_x5.exe
