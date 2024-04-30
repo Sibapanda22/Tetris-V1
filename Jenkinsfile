@@ -53,8 +53,10 @@ pipeline {
         stage('Terraform apply/destroy') {
             steps {
                 dir('Eks-terraform') {
+                    script {
                     sh 'terraform ${env.action} --auto-approve'
                 }
+              }
             }
         }
     }
